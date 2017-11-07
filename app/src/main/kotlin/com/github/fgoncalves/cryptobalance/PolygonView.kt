@@ -33,8 +33,13 @@ class PolygonView : View {
     }
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        initializeFromAttrs(context, attrs)
+    }
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initializeFromAttrs(context, attrs)
+    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -58,5 +63,18 @@ class PolygonView : View {
         polygonShape.polygon = polygon
 
         canvas?.drawPath(polygonShape.path, polygonShape.paint)
+    }
+
+    private fun initializeFromAttrs(context: Context, attrs: AttributeSet) {
+        val a = context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.PolygonView,
+                0, 0)
+
+        try {
+            numberOfPoints = a.getInt(R.styleable.PolygonView_numberOfPoints, DEFAULT_NUMBER_OF_POINTS)
+        } finally {
+            a.recycle()
+        }
     }
 }
